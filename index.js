@@ -8,6 +8,7 @@ module.exports = function(jQuery) {
   }
 
   Events.prototype.bind = function(key, method) {
+    var view = this.view;
     var match = key.match(eventSplitter);
     var event = match[1], selector = match[2];
 
@@ -15,14 +16,14 @@ module.exports = function(jQuery) {
 
     function callback() {
       if (typeof method === 'function') {
-        method.apply(this.view, arguments);    
+        method.apply(view, arguments);    
         return;
       }
       
-      if (!this.view[method]) {
+      if (!view[method]) {
         throw new Error(method + ' method is not defined');
       } else {
-        this.view[method].apply(this.view, arguments);
+        view[method].apply(view, arguments);
       }
     }
 
