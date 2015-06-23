@@ -12,12 +12,24 @@ module.exports = function(jQuery) {
     var event = match[1], selector = match[2];
 
     event = event + '.' + this.view.cid;
-    method = this.view[method].bind(this.view);
+
+    function callback() {
+      if (typeof method === 'function') {
+        method.apply(this.view, arguments);    
+        return;
+      }
+      
+      if (!this.view[method]) {
+        throw new Error(method + ' method is not defined');
+      } else {
+        this.view[method].apply(this.view, arguments);
+      }
+    }
 
     if (selector) {
-      jQuery(this.element).on(event, selector, method);
+      jQuery(this.element).on(event, selector, callback);
     } else {
-      jQuery(this.element).on(event, method);
+      jQuery(this.element).on(event, callback);
     }
   };
 
